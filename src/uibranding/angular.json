@@ -1,0 +1,130 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "mainheader": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/mainheader",
+      "sourceRoot": "projects/mainheader/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "ngx-build-plus:browser",
+          "options": {
+            "outputPath": "dist/mainheader",
+            "index": "projects/mainheader/src/index.html",
+            "main": "projects/mainheader/src/main.ts",
+            "polyfills": "projects/mainheader/src/polyfills.ts",
+            "tsConfig": "projects/mainheader/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/mainheader/src/favicon.ico",
+              "projects/mainheader/src/assets"
+            ],
+            "styles": [
+              "projects/mainheader/src/styles.css",
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "projects/mainheader/webpack.config.js"
+          },
+          "configurations": {
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "buildOptimizer": false
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/mainheader/src/environments/environment.ts",
+                  "with": "projects/mainheader/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "extraWebpackConfig": "projects/mainheader/webpack.prod.config.js"
+            }
+          }
+        },
+        "serve": {
+          "builder": "ngx-build-plus:dev-server",
+          "options": {
+            "browserTarget": "mainheader:build",
+            "extraWebpackConfig": "projects/mainheader/webpack.config.js",
+            "publicHost": "http://localhost:3003",
+            "port": 3003
+          },
+          "configurations": {
+            "development": {
+              "browserTarget": "mainheader:build:development",
+              "extraWebpackConfig": "projects/mainheader/webpack.prod.config.js"
+            },
+            "production": {
+              "browserTarget": "mainheader:build:production",
+              "extraWebpackConfig": "projects/mainheader/webpack.prod.config.js"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mainheader:build"
+          }
+        },
+        "test": {
+          "builder": "ngx-build-plus:karma",
+          "options": {
+            "main": "projects/mainheader/src/test.ts",
+            "polyfills": "projects/mainheader/src/polyfills.ts",
+            "tsConfig": "projects/mainheader/tsconfig.spec.json",
+            "karmaConfig": "projects/mainheader/karma.conf.js",
+            "assets": [
+              "projects/mainheader/src/favicon.ico",
+              "projects/mainheader/src/assets"
+            ],
+            "styles": [
+              "projects/mainheader/src/styles.css"
+            ],
+            "scripts": [],
+            "extraWebpackConfig": "projects/mainheader/webpack.config.js"
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/mainheader/e2e/protractor.conf.js",
+            "devServerTarget": "mainheader:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mainheader:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "mainheader"
+}
