@@ -8,13 +8,15 @@ import { ConfigComponent } from './config/config.component';
 import { PluginProxyComponent } from './microfrontends/plugin-proxy.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialAllModule } from './material.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
     BrowserModule,
     RouterModule.forRoot(APP_ROUTES),
     BrowserAnimationsModule,
-    MaterialAllModule
+    MaterialAllModule,
+    HttpClientModule
   ],
   declarations: [
     AppComponent,

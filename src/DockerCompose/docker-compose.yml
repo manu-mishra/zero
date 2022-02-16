@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  zero.proxy:
+    image: ${DOCKER_REGISTRY-}zero.proxy
+    build:
+      context: ../proxy
+
+  zero.uishell:
+    image: ${DOCKER_REGISTRY-}zero.uishell
+    build:
+      context: ../uishell
+      dockerfile: DockerfileDev
+    volumes:
+      - ../uishell:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+
+  zero.uibranding:
+    image: ${DOCKER_REGISTRY-}zero.uibranding
+    build:
+      context: ../uibranding
+      dockerfile: DockerfileDev
+    volumes:
+      - ../uibranding:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+

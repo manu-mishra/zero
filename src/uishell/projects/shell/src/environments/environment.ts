@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  uibranding_url:'http://localhost:3003/remoteEntry.js', 
+  application1entry_url:'http://localhost:5001/remoteEntry.js'
 };
 
 /*

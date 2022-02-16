@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve mainheader -o",
+    "start:dev": "npx ng serve mainheader --host 0.0.0.0 --disable-host-check --port 80 --poll",
     "build": "ng build mainheader --prod",
     "test": "ng test",
     "lint": "ng lint",

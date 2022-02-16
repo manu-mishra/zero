@@ -4,11 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start:shell": "ng serve shell  -o",
-    "start:mfe2": "ng serve mfe2 -o",
-    "build:shell": "ng build shell --prod",
-    "build:mfe2": "ng build mfe2 --prod",
-    "start": "concurrently \"npm run start:shell\" \"npm run start:mfe2\" ",
-    "build": "npm run build:shell && npm run build:mfe2",
+    "build:shell": "ng build shell --configuration production",
+    "start": "ng serve shell  -o",
+    "start:dev": "npx ng serve shell --host 0.0.0.0 --disable-host-check --port 80 --poll --configuration=docker",
+    "build": "npm run build:shell",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

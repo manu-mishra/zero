@@ -4,6 +4,7 @@ import { buildRoutes } from '../menu-utils';
 import { LookupService } from './microfrontends/lookup.service';
 import { Microfrontend } from './microfrontends/microfrontend';
 import { PluginOptions } from './microfrontends/plugin';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit  {
 
   headerProxyComponent:PluginOptions={
     type: 'module',
-    remoteEntry: 'http://localhost:3003/remoteEntry.js',
+    remoteEntry: environment.uibranding_url,
     exposedModule: './header',
 
     displayName: 'header',

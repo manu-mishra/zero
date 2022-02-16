@@ -1,42 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Microfrontend } from './microfrontend';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LookupService {
+    constructor(){}
     lookup(): Promise<Microfrontend[]> {
         return Promise.resolve([
             {
                 // For Loading
                 type: 'module',
-                remoteEntry: 'http://localhost:3000/remoteEntry.js',
+                remoteEntry: environment.application1entry_url,
                 exposedModule: './Module',
 
                 // For Routing
-                displayName: 'Dashboard',
-                routePath: '',
+                displayName: 'Application 1',
+                routePath: 'application1',
                 ngModuleName: 'DashboardModule'
-            },
-            {
-                // For Loading
-                type: 'module',
-                remoteEntry: 'http://localhost:3000/remoteEntry.js',
-                exposedModule: './Module',
-
-                // For Routing
-                displayName: 'Dashboard',
-                routePath: 'dashboard',
-                ngModuleName: 'DashboardModule'
-            },
-            {
-                // For 
-                type: 'module',
-                remoteEntry: 'http://localhost:3001/remoteEntry.js',
-                exposedModule: './Module',
-
-                // For Routing
-                displayName: 'Bookings',
-                routePath: 'bookings',
-                ngModuleName: 'BookingsModule'
             }
         ] as Microfrontend[]);
     }
