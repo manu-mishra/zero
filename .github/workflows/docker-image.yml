@@ -1,0 +1,95 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "src/**"
+      - ".github/workflows/docker-image.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "src/App1/**"
+      - ".github/workflows/docker-compose-step.yml"
+env:
+  REGISTRY: ghcr.io
+  BuildNumber: 0.0.${{ github.run_id }}
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Log in to the Container registry
+      uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+##### build gateway proxy - end ######
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta-proxy
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: |
+          ${{ env.REGISTRY }}/zero-proxy
+    - name: Build and push
+      id: docker_proxy
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./src/
+        file: ./src/Proxy/Dockerfile
+        tags: |
+          ghcr.io/${{ github.actor }}/zero-proxy:latest
+          ghcr.io/${{ github.actor }}/zero-proxy:${{ env.BuildNumber }}
+        labels: ${{ steps.meta-proxy.outputs.labels }}
+
+##### build gateway proxy - end ######
+
+##### build ui shell ######
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta-uishell
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: |
+          ${{ env.REGISTRY }}/zero-uishell        
+    - name: Build and push
+      id: docker_uishell
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./src/uishell
+        file: ./src/uishell/Dockerfile
+        tags: |
+          ghcr.io/${{ github.actor }}/zero-uishell:latest
+          ghcr.io/${{ github.actor }}/zero-uishell:${{ env.BuildNumber }}
+        labels: ${{ steps.meta-uishell.outputs.labels }}    
+##### build ui shell - end ######
+
+
+##### build ui Header ######
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta-uibranding
+      uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      with:
+        images: |
+          ${{ env.REGISTRY }}/zero-uibranding  
+    - name: Build and push
+      id: docker_uibranding
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./src/uibranding
+        file: ./src/uibranding/Dockerfile
+        tags: |
+          ghcr.io/${{ github.actor }}/zero-uibranding:latest
+          ghcr.io/${{ github.actor }}/zero-uibranding:${{ env.BuildNumber }}
+        labels: ${{ steps.meta-uibranding.outputs.labels }}
+ ##### build ui header - end ######
