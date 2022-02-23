@@ -25,4 +25,5 @@ FROM nginx:latest
 COPY --from=build /usr/local/app/dist/mainheader /usr/share/nginx/html
 
 # Expose port 80
-EXPOSE 80
+EXPOSE 8080
+CMD ["/bin/sh", "-c", "sed -i 's/listen  .*/listen 8080;/g' /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"]
