@@ -40,7 +40,7 @@
               "fileReplacements": [
                 {
                   "replace": "projects/shell/src/environments/environment.ts",
-                  "with": "projects/shell/src/environments/environment.prod.ts"
+                  "with": "projects/shell/src/environments/environment.docker.ts"
                 }
               ]
             },
