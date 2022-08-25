@@ -1,0 +1,127 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zero
+  labels:
+    app: zero
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: zero
+  template:
+    metadata:
+      labels:
+        app: zero
+        service: zero
+        version: zero
+      annotations:
+        consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/connect-service: "zero"
+        consul.hashicorp.com/transparent-proxy: "false"
+        consul.hashicorp.com/connect-service-upstreams: "uibranding:1701,app1:1702"
+    spec:
+      containers:
+       -  name : zero-proxy
+          image: ghcr.io/manu-mishra/zero-proxy:0.0.2741930350
+          imagePullPolicy: Always
+          ports:
+           -  containerPort: 8081
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8081
+          volumeMounts:
+          - name: zero-proxy-appsettings-volume
+            mountPath: /app/Settings
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "10m"
+
+       -  name : zero-uishell
+          image: ghcr.io/manu-mishra/zero-uishell:0.0.2741930350
+          imagePullPolicy: Always
+          ports:
+           -  containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "10m"
+      imagePullSecrets:
+       -  name: private-repo-secret
+      volumes:
+      - name: zero-proxy-appsettings-volume
+        configMap:
+          name: zero-proxy-appsetting
+      serviceAccountName: zero
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zero
+---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: zero
+#  labels:
+#    app: zero
+#    service: zero
+#  annotations:
+#    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+#    service.beta.kubernetes.io/azure-pls-create: "true"
+#    service.beta.kubernetes.io/azure-pls-name: zeroprivatelink
+#    service.beta.kubernetes.io/azure-pls-ip-configuration-subnet: "snet-ingress"
+#    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count: "1"
+#    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address: 172.19.255.7
+#    service.beta.kubernetes.io/azure-pls-proxy-protocol: "false"
+#    service.beta.kubernetes.io/azure-pls-visibility: "*"
+#spec:
+#  type: LoadBalancer
+#  ports:
+#    - name: http-zero
+#      port: 80
+#      targetPort: 8081
+#      protocol: TCP
+#  selector:
+#    service: zero
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zero
+  labels:
+    app: zero
+    service: zero
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "snet-ingress"
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http-zero
+      port: 80
+      targetPort: 8081
+      protocol: TCP
+  selector:
+    service: zero
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zero-proxy-appsetting
+data:
+  appsettings.json: |-
+    {
+      "Logging": 
+      {
+        "LogLevel": 
+        {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      }
+    }
