@@ -1,0 +1,148 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1
+  labels:
+    app: app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+        service: app1
+        version: app1
+    spec:
+      containers:
+       -  name : app1-proxy
+          image: ghcr.io/manu-mishra/app1-proxy:0.0.1884421602
+          imagePullPolicy: Always
+          ports:
+           -  containerPort: 8080
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8080
+          volumeMounts:
+          - name: proxy-appsettings-volume
+            mountPath: /app/Settings
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "10m"
+
+       -  name : app1-microservice1
+          image: ghcr.io/manu-mishra/app1-microservice1:0.0.1884421602
+          imagePullPolicy: Always
+          ports:
+           -  containerPort: 8081
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8081
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "10m"
+
+       -  name : app1-microservice2
+          image: ghcr.io/manu-mishra/app1-microservice2:0.0.1884421602
+          imagePullPolicy: Always
+          ports:
+           -  containerPort: 8082
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:8082
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "10m"
+       -  name : app1-ui
+          image: ghcr.io/manu-mishra/app1-ui:0.0.1884421602
+          imagePullPolicy: Always
+          ports:
+           -  containerPort: 80
+              protocol: TCP
+      imagePullSecrets:
+       -  name: private-repo-secret
+      volumes:
+      - name: proxy-appsettings-volume
+        configMap:
+          name: proxy-appsetting
+      serviceAccountName: app1
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1
+  labels:
+    app: app1
+    service: app1
+spec:
+  ports:
+    - name: http-app1
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    service: app1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxy-appsetting
+data:
+  appsettings.json: |-
+    {
+      "Logging": 
+      {
+        "LogLevel": 
+        {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+     "ReverseProxy": 
+     {
+       "Clusters": {
+         "microservice1": {
+           "Destinations": {
+             "destination1": {
+               "Address": "http://localhost:8081/"
+             }
+           }
+         },
+         "microservice2": {
+           "Destinations": {
+             "destination1": {
+               "Address": "http://localhost:8082/"
+             }
+           }
+         },
+         "UI": {
+           "Destinations": {
+             "destination1": {
+               "Address": "http://localhost:80/"
+             }
+           }
+         },
+         "external": {
+           "Destinations": {
+             "destination1": {
+               "Address": "http://manumishra.com"
+             }
+           }
+         }
+       }
+     }
+    }

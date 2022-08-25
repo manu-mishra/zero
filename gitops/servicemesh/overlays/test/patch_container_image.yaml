@@ -1,0 +1,11 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uibranding
+spec:
+  template:
+    spec:
+      containers:
+       -  name : zero-uibranding
+          image: ghcr.io/manu-mishra/zero-uibranding:0.0.2741128668
