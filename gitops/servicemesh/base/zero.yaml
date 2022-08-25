@@ -63,32 +63,6 @@ kind: ServiceAccount
 metadata:
   name: zero
 ---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: zero
-#  labels:
-#    app: zero
-#    service: zero
-#  annotations:
-#    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-#    service.beta.kubernetes.io/azure-pls-create: "true"
-#    service.beta.kubernetes.io/azure-pls-name: zeroprivatelink
-#    service.beta.kubernetes.io/azure-pls-ip-configuration-subnet: "snet-ingress"
-#    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count: "1"
-#    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address: 172.19.255.7
-#    service.beta.kubernetes.io/azure-pls-proxy-protocol: "false"
-#    service.beta.kubernetes.io/azure-pls-visibility: "*"
-#spec:
-#  type: LoadBalancer
-#  ports:
-#    - name: http-zero
-#      port: 80
-#      targetPort: 8081
-#      protocol: TCP
-#  selector:
-#    service: zero
----
 apiVersion: v1
 kind: Service
 metadata:
