@@ -99,7 +99,7 @@ jobs:
         find: ".*?image.*$"
         replace: "          image: ghcr.io/manu-mishra/zero-uibranding:${{ env.BuildNumber }}"
         regex: true
-        include: "**patch_container_image.yaml"
+        include: "gitops/servicemesh/overlays/test/**"
     - name: Push changes
       uses: ad-m/github-push-action@v0.6.0
       with:
