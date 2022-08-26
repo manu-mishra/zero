@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
        -  name : zero-uibranding
-          image: ghcr.io/manu-mishra/zero-uibranding:0.0.2741930350
+          image: ghcr.io/manu-mishra/zero-uibranding:0.0.2935584537
